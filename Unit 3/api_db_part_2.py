@@ -15,5 +15,3 @@ trucks_data = requests.get("https://www.bnefoodtrucks.com.au/api/1/trucks")
 
 # display formatted data
 jprint(trucks_data)
-
-
