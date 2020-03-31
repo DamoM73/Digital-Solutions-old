@@ -12,7 +12,7 @@ def get_rating(target_isbn):
         # parse XML response
         root = ET.fromstring(goodread_api.content)
 
-        # assining relevent information to variables
+        # assigning relevent information to variables
         title = (root[1][1].text)
         avg_rating = (root[1][18].text)
 
@@ -31,3 +31,4 @@ with open('./Unit 3/Library.txt') as library_db:
     for book in csv_reader:
         # get rating of each book
         get_rating(book[10])
+
