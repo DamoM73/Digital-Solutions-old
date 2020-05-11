@@ -17,6 +17,15 @@ MBCS_GREY = "#545F66"
 def passing():
     pass
 
+def close():
+    root.destroy()
+
+# ***** GLOBAL VARIABLES *****
+points = [0,0,0]
+time = 0
+red_score = 0
+blue_score = 0
+
 # ***** CREATE WINDOW *****
 root = tk.Tk()
 root.geometry("1920x1080")
@@ -71,8 +80,6 @@ stop_btn.grid(row=2,column=1)
 reset_btn = tk.Button(timer_fr, text="Reset", font=("Arial",30), bg="ORANGE", width=BTN_SIZE, relief=tk.FLAT, command=passing)
 reset_btn.grid(row=2,column=2)
 
-
-
 # *** right middle frame
 right_middle_fr = tk.Frame(middle_fr, bg=MBCS_WHITE)
 right_middle_fr.grid(column=2, row=0)
@@ -91,6 +98,13 @@ blue_points_2_btn.grid(row=2, column=1)
 
 blue_points_3_btn = tk.Button(right_middle_fr,text="0", font=BUTTON_FNT, bg=MBCS_WHITE, fg=MBCS_BLUE, width=BTN_SIZE, relief=tk.FLAT,command=passing)
 blue_points_3_btn.grid(row=2, column=2)
+
+# *** Bottom frame ***
+bottom_fr = tk.Frame(root, bg=MBCS_WHITE)
+bottom_fr.pack()
+
+exit_btn = tk.Button(bottom_fr,text="Exit", font=BUTTON_FNT, bg=MBCS_GREY, fg=MBCS_WHITE, width=BTN_SIZE, relief=tk.FLAT,command=close)
+exit_btn.pack()
 
 # ***** MAIN PROGRAM *****
 root.mainloop()
