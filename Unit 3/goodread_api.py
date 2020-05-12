@@ -30,5 +30,6 @@ with open('./Unit 3/Library.txt') as library_db:
     # iterate over the books in the library database
     for book in csv_reader:
         # get rating of each book
-        get_rating(book[10])
+        #get_rating(book[10])
+        print(book[21], book[10])
 
