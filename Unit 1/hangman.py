@@ -1,12 +1,20 @@
 import random
-from words import word_list
-from hangman_stages import stages
+import words
+import stages
 
 def get_word():
-   word = random.choice(word_list)
+   # return a random variable from the word list
+   word = random.choice(words.word_list)
    return word.upper()
 
+def display_hangman(tries):
+   # return the gallow for the number of tries left
+   return stages.stages[tries]
+
 def play(word):
+   # play a round of the game for the word provided
+
+   # initialise the round
    word_completion = "_" * len(word)
    guessed = False
    guessed_letters = []
@@ -15,6 +23,8 @@ def play(word):
    print("Let's play Hangman!")
    print(display_hangman(tries))
    print("\n")
+   
+   # Guessing letter loop
    while not guessed and tries > 0:
       guess = input("Please guess a letter or word: ").upper()
       if len(guess) == 1 and guess.isalpha():
@@ -56,8 +66,7 @@ def play(word):
       print("Sorry, you ran out of tries. The word was " + word + ". Maybe next time")
 
 
-def display_hangman(tries):
-   return stages[tries]
+
 
 def main():
    word = get_word()
