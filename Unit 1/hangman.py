@@ -20,7 +20,7 @@ def play(word):
          if guess in guessed_letters:
             print("You already guessed the letter", guess)
          elif guess not in word:
-            print(guess, "is not in the word".)
+            print(guess, "is not in the word.")
             tries -= 1
             guessed_letters.append(guess)
          else:
@@ -31,8 +31,8 @@ def play(word):
             for index in indices:
                word_as_a_list[index] = guess
             word_completion = "".join(word_as_a_list)
-            if "_" not in word_completion
-            guessed = True
+            if "_" not in word_completion:
+               guessed = True
 
       elif len(guess) == len(word) and guess.isalpha():
          if guess in guessed_words:
@@ -54,10 +54,6 @@ def play(word):
    else:
       print("Sorry, you ran out of tries. The word was " + word + ". Maybe next time")
 
-        
-      
-
-      
 
 def display_hangman(tries):
    stages = [  # final state: head, torso, both arms, and both legs
@@ -130,4 +126,15 @@ def display_hangman(tries):
                   |     
                   -
                """
-    ]
+   ]
+   return stages[tries]
+
+def main():
+   word = get_word()
+   play(word)
+   while input("Play Again").upper() == "Y":
+      word = get_word()
+      play(word)
+
+if __name__ == "__main__":
+   main()
