@@ -32,4 +32,3 @@ with open('./Unit 3/Library.txt') as library_db:
         # get rating of each book
         #get_rating(book[10])
         print(book[21], book[10])
-
