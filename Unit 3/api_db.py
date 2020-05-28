@@ -141,11 +141,18 @@ create_listing = """
                     ON Bookings.truck_id = Trucks.truck_id
                     JOIN Sites
                     ON Bookings.site_id = Sites.site_id
+                    WHERE Bookings.start = '19:00'
                     ORDER BY Bookings.date
                 """
 
 listing = sql_query(DB_FILE,create_listing)
 
-for row in listing:
-    print(row)
+show_trucks = """
+                SELECT name, website
+                FROM Trucks
+                WHERE name = 'good boy'
+            """
 
+print(sql_query(DB_FILE,show_trucks))
+# for row in listing:
+#     print(row)
