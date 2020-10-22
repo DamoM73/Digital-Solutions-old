@@ -4,7 +4,7 @@ import sqlite3
 
 root = Tk()
 root.title('Codemy SQLite tutorial')
-root.geometry("400x400")
+root.geometry("400x600")
 
 # Databases
 
@@ -25,9 +25,45 @@ c.execute("""CREATE TABLE addresses (
     postcode integer
     )""")
 '''
+def save():
+    # connect to database
+    conn = sqlite3.connect('address_book.db')
+    # create cursor
+    c = conn.cursor()
+
+    record_id = select_box.get()
+    
+    c.execute("""
+        UPDATE addresses SET
+        first_name = :first,
+        last_name = :last,
+        address = :address,
+        city = :city,
+        state = :state,
+        postcode = :postcode
+        
+        WHERE oid = :oid""",
+        {"first": f_name_editor.get(),
+        "last": l_name_editor.get(),
+        "address": address_editor.get(),
+        "city": city_editor.get(),
+        "state": state_editor.get(),
+        "postcode": pcode_editor.get(),
+
+        "oid": record_id}
+        )
+      
+
+    # commit changes
+    conn.commit()
+    # close connection
+    conn.close()
+
+    editor.destroy()
 
 # Create update function
 def update():
+    global editor
     # connect to database
     conn = sqlite3.connect('address_book.db')
     # create cursor
@@ -47,7 +83,10 @@ def update():
     
     editor = Tk()
     editor.title('Update record')
-    editor.geometry("400x400")
+    editor.geometry("400x300")
+
+    # create global variables for text box names
+    global f_name_editor, l_name_editor, address_editor, city_editor, state_editor, pcode_editor
 
     # Create text boxes
     f_name_editor = Entry(editor, width=30)
@@ -82,7 +121,7 @@ def update():
     Label(editor, text="Post Code").grid(row=5,column=0)
 
     # Create Save button to save edited record
-    save_btn = Button(editor, text="Save Record", command=query)
+    save_btn = Button(editor, text="Save Record", command=save)
     save_btn.grid(row=6,column=0,columnspan=2,pady=10, padx=10, ipadx=125)
 
 
