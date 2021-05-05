@@ -16,7 +16,7 @@ def sql_command(db_file,command):
 
 def sql_query(db_file, query):
     # connect to database
-    with sql.connect(db_file, query) as db:
+    with sql.connect(db_file) as db:
         cursor = db.cursor()
 
         # run query
@@ -27,7 +27,7 @@ def create_db(db_file):
     # artist table
     create_artist_tbl = """
                     CREATE TABLE Artist (
-                        artist_id TEXT PRIMARY KEY,
+                        artist_id INTEGER PRIMARY KEY AUTOINCREMENT,
                         artist_name TEXT NOT NULL
                     );
                     """
@@ -36,7 +36,7 @@ def create_db(db_file):
     # genre table
     create_genre_tble = """
                         CREATE TABLE Genre (
-                            genre_id INTEGER PRIMARY KEY,
+                            genre_id INTEGER PRIMARY KEY AUTOINCREMENT,
                             genre_name TEXT NOT NULL
                         );
                         """
@@ -87,7 +87,9 @@ def create_db(db_file):
                             """
     sql_command(db_file,create_songartist_tbl)
 
-def import_db(db_file):
+def import_artist_genre(db_file):
+    artist_count = 0
+    genre_count = 0
     # import artist data and genre data
     with open(ARTIST_FILE, encoding="utf-8") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter = ",")
@@ -96,17 +98,16 @@ def import_db(db_file):
         added_genres = []
         for row in csv_reader:
             # add artist information
-            id = row[0]
-            name = row[3].replace('"',"'")
+            name = row[1].replace('"',"'")
             insert_artist = f"""
-                            INSERT INTO Artist (artist_id, artist_name)
-                            VALUES ("{id}","{name}")
+                            INSERT INTO Artist (artist_name)
+                            VALUES ("{name}")
                             """
+            artist_count += 1
             sql_command(db_file,insert_artist)
-            print(f"Artist {name} added")
 
             # add genre information
-            genres = row[2].strip('][').split(',')
+            genres = row[0].strip('][').split(',')
             for raw_genre in genres:
                 genre = raw_genre.strip()[1:-1]
                 if genre not in added_genres and genre != "":
@@ -116,8 +117,12 @@ def import_db(db_file):
                                     """
                     sql_command(db_file,insert_genre)
                     added_genres.append(genre)
-                    print(f"Genre of {genre} added")
-    
+                    genre_count += 1
+
+            print(f"{artist_count} artists, {genre_count} genres added")
+
+def import_song(db_file):
+    song_count = 0
     # import song data
     with open(DATA_FILE, encoding="utf-8") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter = ",")
@@ -149,7 +154,59 @@ def import_db(db_file):
                             """
                 
             sql_command(db_file,insert_songs)
-            print(f"Song {name} added")
+            song_count += 1
+            print(f"Songs: {song_count}")
+
+def build_artist_genre(db_file):
+    artist_genre_count = 0
+    with open(ARTIST_FILE, encoding="utf-8") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter = ",")
+        next(csv_reader)    # skips header
+        # create sql command for each row / record
+        
+        for row in csv_reader:
+            # retrieve artist_id
+            name = row[1].replace('"',"'")
+            artist_id_query = f"""
+                            SELECT artist_id
+                            FROM Artist
+                            WHERE artist_name = "{name}"
+                            """
+            
+            artist_id = sql_query(db_file,artist_id_query)[0][0]
+
+            # retrieve genre_id
+            genres = row[0].strip('][').split(',')
+            for raw_genre in genres:
+                genre = raw_genre.strip()[1:-1]
+                #print(genre)
+                if genre != "":
+                    genre_id_query = f"""
+                                        SELECT genre_id
+                                        FROM Genre
+                                        WHERE genre_name = "{genre}"
+                                        """
+                    genre_id = sql_query(db_file, genre_id_query)[0][0]
+                    
+                    # insert record
+                    insert_artist_genre = f"""
+                                        INSERT INTO Artist_Genre
+                                        VALUES ({artist_id},{genre_id})
+                                        """
+                    sql_command(db_file,insert_artist_genre)
+                    artist_genre_count += 1
+                    print(f"{artist_genre_count} Artist Genre records inserted")
+
+            
+
+
+            
+
+def import_db(db_file):
+    import_artist_genre(db_file)
+    import_song(db_file)
+    build_artist_genre(db_file)
+            
             
 
 
@@ -158,9 +215,9 @@ def import_db(db_file):
 
 # ----- MAIN PROGRAM -----
 DB_FILE = "./IA2/spotify.db"
-ARTIST_FILE = "./IA2/artists.csv"
+ARTIST_FILE = "./IA2/data_by_artist_o.csv"
 DATA_FILE = "./IA2/data_o.csv"
 
-delete_db(DB_FILE)
-create_db(DB_FILE)
+#delete_db(DB_FILE)
+#create_db(DB_FILE)
 import_db(DB_FILE)
