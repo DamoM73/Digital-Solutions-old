@@ -209,17 +209,17 @@ def build_song_artist(db_file):
             # retrieve artist id
             artists = row[3].strip('][').split(',')
             for raw_artist in artists:
-                artist = raw_artist.strip()[1:-1]
+                name = raw_artist.strip()[1:-1].replace('"',"'")
+                #print(name)
                 artist_id_query = f"""
                             SELECT artist_id
                             FROM Artist
-                            WHERE artist_name = "{artist}"
+                            WHERE artist_name = "{name}"
                             """
                 artist_id = sql_query(db_file,artist_id_query)
                 print(artist_id)
                 
-
-
+                
 def import_db(db_file):
     #import_artist_genre(db_file)
     #import_song(db_file)
@@ -233,5 +233,5 @@ DATA_FILE = "./IA2/data_o.csv"
 
 #delete_db(DB_FILE)
 #create_db(DB_FILE)
-import_db(DB_FILE)
-#sql_command(DB_FILE,"DROP TABLE Artist_Genre")
+#import_db(DB_FILE)
+sql_command(DB_FILE,"DROP TABLE Artist")
