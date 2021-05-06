@@ -42,7 +42,6 @@ def create_db(db_file):
                         """
     sql_command(db_file, create_genre_tble)
     
-
     # artist/genre table
     create_artistgenre_tbl = """
                             CREATE TABLE Artist_Genre (
@@ -162,8 +161,8 @@ def build_artist_genre(db_file):
     with open(ARTIST_FILE, encoding="utf-8") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter = ",")
         next(csv_reader)    # skips header
-        # create sql command for each row / record
         
+        # create sql command for each row / record
         for row in csv_reader:
             # retrieve artist_id
             name = row[1].replace('"',"'")
@@ -197,21 +196,35 @@ def build_artist_genre(db_file):
                     artist_genre_count += 1
                     print(f"{artist_genre_count} Artist Genre records inserted")
 
-            
+def build_song_artist(db_file):
+    song_artist_count = 0
+    with open(DATA_FILE,encoding="utf-8") as csv_file:
+        csv_reader = csv.reader(csv_file,delimiter = ",")
 
-
+        # create sql command for each row / record
+        for row in csv_reader:
+            # retrieve song id
+            song_id = row[8]
             
+            # retrieve artist id
+            artists = row[3].strip('][').split(',')
+            for raw_artist in artists:
+                artist = raw_artist.strip()[1:-1]
+                artist_id_query = f"""
+                            SELECT artist_id
+                            FROM Artist
+                            WHERE artist_name = "{artist}"
+                            """
+                artist_id = sql_query(db_file,artist_id_query)
+                print(artist_id)
+                
+
 
 def import_db(db_file):
-    import_artist_genre(db_file)
-    import_song(db_file)
-    build_artist_genre(db_file)
-            
-            
-
-
-
-
+    #import_artist_genre(db_file)
+    #import_song(db_file)
+    #build_artist_genre(db_file)
+    build_song_artist(db_file)
 
 # ----- MAIN PROGRAM -----
 DB_FILE = "./IA2/spotify.db"
@@ -221,3 +234,4 @@ DATA_FILE = "./IA2/data_o.csv"
 #delete_db(DB_FILE)
 #create_db(DB_FILE)
 import_db(DB_FILE)
+#sql_command(DB_FILE,"DROP TABLE Artist_Genre")
