@@ -1,8 +1,6 @@
 import sqlite3 as sql
 import csv
 import os
-from sqlite3 import dbapi2
-import time
 
 def delete_db(db_file):
     if os.path.exists(db_file):
