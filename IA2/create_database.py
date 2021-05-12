@@ -80,7 +80,7 @@ def create_db(db_file):
     create_songartist_tbl = """
                             CREATE TABLE Song_Artist (
                                 song_id TEXT NOT NULL REFERENCES Song(song_id),
-                                artist_id INTEGER NOT NULL REFERENCES Artist(artist_id),
+                                artist_id TEXT NOT NULL REFERENCES Artist(artist_id),
                                 PRIMARY KEY (song_id,artist_id)
                             );
                             """
@@ -200,7 +200,6 @@ def build_song_artist(db_file):
     song_artist_count = 0
     with open(DATA_FILE,encoding="utf-8") as csv_file:
         csv_reader = csv.reader(csv_file,delimiter = ",")
-        next(csv_reader)    # skips header
 
         # create sql command for each row / record
         for row in csv_reader:
@@ -211,29 +210,18 @@ def build_song_artist(db_file):
             artists = row[3].strip('][').split(',')
             for raw_artist in artists:
                 name = raw_artist.strip()[1:-1].replace('"',"'")
+                #print(name)
                 artist_id_query = f"""
                             SELECT artist_id
                             FROM Artist
                             WHERE artist_name = "{name}"
                             """
-                raw_artist_id = sql_query(db_file,artist_id_query)
-                if raw_artist_id != []:
-                    artist_id = raw_artist_id[0][0]
-
-                    # insert record
-                    insert_song_artist = f"""
-                                            INSERT INTO Song_Artist
-                                            VALUES ("{song_id}",{artist_id})
-                                            """
-                    sql_command(db_file,insert_song_artist)
-                    song_artist_count += 1
-                    print(f"{song_artist_count} Song Artist records inserted")
-
-                
+                artist_id = sql_query(db_file,artist_id_query)
+                print(artist_id)
                 
                 
 def import_db(db_file):
-    #import_artist_genre(db_file)
+    import_artist_genre(db_file)
     #import_song(db_file)
     #build_artist_genre(db_file)
     build_song_artist(db_file)
@@ -243,7 +231,7 @@ DB_FILE = "./IA2/spotify.db"
 ARTIST_FILE = "./IA2/data_by_artist_o.csv"
 DATA_FILE = "./IA2/data_o.csv"
 
-#delete_db(DB_FILE)
-#create_db(DB_FILE)
+delete_db(DB_FILE)
+create_db(DB_FILE)
 import_db(DB_FILE)
-#sql_command(DB_FILE,"DROP TABLE Song_Artist")
+#sql_command(DB_FILE,"DROP TABLE Artist")
