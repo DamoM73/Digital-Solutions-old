@@ -50,7 +50,6 @@ def create_db():
                     """
     sql_command(reading_tbl)
 
-
 def enter_data():
     # will enter data from the DATASOURCE file into the DATABASE structure
     
