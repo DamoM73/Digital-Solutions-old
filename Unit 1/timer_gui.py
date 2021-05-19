@@ -22,28 +22,27 @@ def reset():
     root.current_time = root.time
 
 def set_time():
-    set_window = tk.Toplevel(root)
-    set_window.geometry("200x150")
+    top = tk.Toplevel()
+    top.title("Set Time")
+    top.geometry("200x150")
+    
+    time = tk.StringVar(top,root.time)
 
-    tk.Label(set_window, text="Enter time in seconds").grid(row=0,column=0,columnspan=2)
+    def ok():
+        root.time = int(time.get())
+        root.current_time = root.time
+        top.destroy()
 
-    set_window.time_var = tk.StringVar(set_window, root.time)
-    time_txt = tk.Entry(set_window,textvariable=set_window.time_var)
-    time_txt.grid(row=1,column=0,columnspan=2)
-
-    def save_time():
-        root.time = int(set_window.set_window.time_var.get())
-        set_window.destroy()
-        set_window.update()
-
-    ok_btn = tk.Button(set_window,text="Ok",command=save_time)
+    tk.Label(top,text="Enter time in seconds").grid(row=0,column=0,columnspan=2)
+    
+    new_time_ent = tk.Entry(top,textvariable=time)
+    new_time_ent.grid(row=1,column=0,columnspan=2)
+    
+    ok_btn = tk.Button(top,text="Ok",command=ok)
     ok_btn.grid(row=2,column=0)
 
-    cancel_btn = tk.Button(set_window,text="Cancel",command=None)
+    cancel_btn = tk.Button(top,text="Cancel",command=top.destroy)
     cancel_btn.grid(row=2,column=1)
-
-
-
 
 # make window
 root = tk.Tk()
