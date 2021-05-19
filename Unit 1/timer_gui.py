@@ -21,6 +21,9 @@ def reset():
     root.running = False
     root.current_time = root.time
 
+def set_time():
+    set_window = tk.Toplevel(root)
+
 # make window
 root = tk.Tk()
 root.geometry("600x400")
@@ -44,7 +47,7 @@ pause_btn.grid(row=2,column=1)
 reset_btn = tk.Button(root,text="Reset",font=("Arial",20),command=reset)
 reset_btn.grid(row=2,column=2)
 
-set_btn = tk.Button(root,text="Set",font=("Arial",20),command=None)
+set_btn = tk.Button(root,text="Set",font=("Arial",20),command=set_time)
 set_btn.grid(row=2,column=3)
 
 # ===== MAIN PROGRAM =====
