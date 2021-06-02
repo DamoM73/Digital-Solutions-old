@@ -23,11 +23,28 @@ def reset():
 
 def set_time():
     set_window = tk.Toplevel(root)
-    tk.Label(set_window,text="Enter time in seconds").pack 
+    set_window.geometry("200x150")
+    
+    tk.Label(set_window, text="Enter time in seconds").grid(row=0,column=0,columnspan=2)
+
+    time_var = tk.StringVar(set_window, root.time)
+    time_txt = tk.Entry(set_window,textvariable=time_var)
+    time_txt.grid(row=1,column=0,columnspan=2)
+
+    ok_btn = tk.Button(set_window,text="Ok",command=save_time)
+    ok_btn.grid(row=2,column=0)
+
+    cancel_btn = tk.Button(set_window,text="Cancel",command=None)
+    cancel_btn.grid(row=2,column=1)
+
+def save_time():
+    root.time = int(set_window.time_var.get())
+    set_window.destroy()
+    set_window.update()
 
 # make window
 root = tk.Tk()
-root.geometry("600x400")
+root.geometry("400x300")
 root.title("Timer")
 
 root.time = 330
