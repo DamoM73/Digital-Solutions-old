@@ -148,7 +148,7 @@ def import_db(db_file):
             
 
                     
-            
+    print(artist_genre_list)        
     # Write data lists to database
     sql_many_command(db_file,"INSERT INTO Artist VALUES (?)",artist_list)
     sql_many_command(db_file,"INSERT OR IGNORE INTO Genre VALUES (?)",genre_list)
