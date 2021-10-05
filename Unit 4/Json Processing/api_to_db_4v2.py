@@ -58,7 +58,7 @@ create_sites_tbl = """
 	                    latitude REAL,
 	                    longitude REAL);
                     """
-create_table(DB_FILE,"Sites",create_sites_tbl)
+create_table(DB_FILE,"Sites",create_sites_tbl)  N
 
 # bookings table
 create_bookings_tble = """
